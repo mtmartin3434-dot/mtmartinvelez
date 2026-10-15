@@ -6,7 +6,10 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://mtmartinvelez.com',
+	// Provisional: the Vercel deployment address. Change this to
+	// https://mtmartinvelez.com once the domain is yours — it drives the
+	// canonical tags, sitemap and feed links.
+	site: 'https://mtmartinvelez.vercel.app',
 	integrations: [mdx(), sitemap()],
 	i18n: {
 		locales: ['en', 'es'],
