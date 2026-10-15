@@ -1,0 +1,103 @@
+---
+import { CV } from '../data/cv';
+import type { Locale } from '../i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const cv = CV[locale];
+---
+
+<div class="cv-title">
+	<h1>{cv.name}</h1>
+	<p class="contact">
+		{cv.location} · <a href={cv.contact.phoneHref}>{cv.contact.phone}</a> ·
+		<a href={cv.contact.emailHref}>{cv.contact.email}</a> ·
+		<a href={cv.contact.linkedinHref}>{cv.contact.linkedin}</a>
+	</p>
+	<p class="contact">{cv.languagesLine}</p>
+	<p class="tagline">{cv.tagline}</p>
+</div>
+
+{
+	cv.sections.map((section) => (
+		<section>
+			<h2>{section.title}</h2>
+			{/* A single-item section is prose (the profile summary, the tools list),
+			    not a one-bullet list. */}
+			{section.items?.length === 1 && <p>{section.items[0]}</p>}
+			{(section.items ?? []).length > 1 && (
+				<ul>{section.items?.map((item) => <li>{item}</li>)}</ul>
+			)}
+			{section.entries?.map((entry) => (
+				<div class="entry">
+					<h3>{entry.title}</h3>
+					{entry.meta && <p class="meta">{entry.meta}</p>}
+					{entry.intro && <p>{entry.intro}</p>}
+					{entry.bullets && (
+						<ul>
+							{entry.bullets.map((bullet) => (
+								<li>{bullet}</li>
+							))}
+						</ul>
+					)}
+				</div>
+			))}
+		</section>
+	))
+}
+
+<style>
+	.cv-title {
+		text-align: center;
+		margin-bottom: 2em;
+	}
+	.cv-title h1 {
+		margin: 0 0 0.25em;
+	}
+	.cv-title .contact {
+		margin: 0.15em 0;
+		color: rgb(var(--gray-dark));
+	}
+	.cv-title .contact a {
+		color: inherit;
+	}
+	.cv-title .tagline {
+		margin: 0.6em 0 0;
+		color: rgb(var(--gray));
+		font-style: italic;
+	}
+	section {
+		margin-bottom: 2.5em;
+	}
+	section > h2 {
+		font-size: 1.1rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: rgb(var(--gray-dark));
+		border-bottom: 1px solid rgba(var(--gray), 0.3);
+		padding-bottom: 0.25em;
+		margin-bottom: 1em;
+	}
+	.entry {
+		margin-bottom: 1.5em;
+	}
+	.entry h3 {
+		margin: 0;
+		font-size: 1rem;
+	}
+	.entry .meta {
+		color: rgb(var(--gray));
+		font-size: 0.9em;
+		margin: 0.1em 0 0.4em;
+	}
+	.entry ul {
+		margin: 0;
+		padding-left: 1.2em;
+	}
+	.entry li {
+		margin-bottom: 0.3em;
+	}
+</style>

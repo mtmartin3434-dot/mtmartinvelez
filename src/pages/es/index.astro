@@ -1,0 +1,82 @@
+---
+import Base from '../../components/Base.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Portrait from '../../components/Portrait.astro';
+import portrait from '../../assets/portrait.png';
+import { getPosts, postSlug } from '../../data/posts';
+import { localizedPath, SITE_DESCRIPTIONS, SITE_NAMES, UI } from '../../i18n';
+
+const posts = await getPosts('es');
+---
+
+<Base title={SITE_NAMES.es} description={SITE_DESCRIPTIONS.es} locale="es">
+	<Fragment slot="head">
+		<style>
+			.hero {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				gap: 0.9em;
+				padding: 2.5em 0 1.5em;
+			}
+			.hero h1 {
+				margin: 0;
+			}
+			.hero p {
+				margin: 0;
+				color: rgb(var(--gray));
+			}
+			.post-list {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.post-list {
+				text-align: left;
+			}
+			.post-list li {
+				display: flex;
+				align-items: baseline;
+				gap: 1rem;
+				margin-bottom: 0.4em;
+			}
+			.post-list .year {
+				flex: 0 0 3rem;
+				color: rgb(var(--muted));
+				font-family: var(--font-mono), monospace;
+				font-size: 0.8125rem;
+			}
+			.empty {
+				color: rgb(var(--gray));
+			}
+
+		</style>
+	</Fragment>
+
+	<section class="hero">
+		<Portrait src={portrait} />
+		<div>
+			<h1>{SITE_NAMES.es}</h1>
+			<p>{SITE_DESCRIPTIONS.es}</p>
+		</div>
+	</section>
+
+	<section>
+		<h2 class="sr-only">{UI.es.latestPosts}</h2>
+		{
+			posts.length ? (
+				<ul class="post-list">
+					{posts.map((post) => (
+						<li>
+							<FormattedDate date={post.data.pubDate} locale="es-ES" />
+							<a href={localizedPath('es', `/blog/${postSlug(post)}`)}>{post.data.title}</a>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p class="empty">{UI.es.noPosts}</p>
+			)
+		}
+	</section>
+</Base>

@@ -1,0 +1,228 @@
+/*
+  Visual language follows rauchg.com: Geist, a 42rem column, small type, flat
+  black-or-white background, and underlined links rather than coloured ones.
+  Written for this site; no CSS copied from his project.
+ */
+
+:root {
+	--text: 17, 17, 17;
+	--muted: 107, 114, 128;
+	--faint: 209, 213, 219;
+	--hover-bg: 229, 229, 229;
+	--border: 209, 213, 219;
+	--bg: 255, 255, 255;
+	--bg-elevated: 255, 255, 255;
+	--shadow-color: 17, 17, 17;
+	--box-shadow: 0 2px 8px rgba(var(--shadow-color), 6%);
+	/* Full-colour value, for the components that use `color: var(--accent)`. */
+	--accent: #111111;
+	/* Aliases for components still written against the old palette names. */
+	--black: var(--text);
+	--gray-dark: var(--text);
+	--gray: var(--muted);
+	--gray-light: var(--hover-bg);
+	--accent-dark: #111111;
+}
+
+/* Grey-100 on black, which is the whole of his dark palette. */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--text: 243, 244, 246;
+		--muted: 156, 163, 175;
+		--faint: 87, 83, 78;
+		--hover-bg: 64, 64, 64;
+		--border: 87, 83, 78;
+		--bg: 0, 0, 0;
+		--bg-elevated: 0, 0, 0;
+		--shadow-color: 0, 0, 0;
+		--accent: #ffffff;
+		--accent-dark: #ffffff;
+	}
+}
+
+body {
+	font-family: var(--font-body), sans-serif;
+	margin: 0 auto;
+	padding: 0.75rem 1.5rem;
+	max-width: 42rem;
+	text-align: left;
+	background-color: rgb(var(--bg));
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	color: rgb(var(--text));
+	font-size: 16px;
+	line-height: 1.7;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+main {
+	min-height: 70vh;
+	padding-top: 0.25rem;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 0 0.5rem 0;
+	color: rgb(var(--text));
+	font-weight: 700;
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+}
+h1 {
+	font-size: 1.75rem;
+}
+h2 {
+	font-size: 1.25rem;
+}
+h3 {
+	font-size: 1.0625rem;
+}
+h4 {
+	font-size: 1rem;
+}
+h5,
+h6 {
+	font-size: 0.875rem;
+}
+strong,
+b {
+	font-weight: 700;
+}
+a {
+	color: rgb(var(--text));
+	text-decoration-color: rgb(var(--faint));
+	text-underline-offset: 0.2em;
+	transition: color 0.15s ease;
+}
+a:hover {
+	color: rgb(var(--text));
+	text-decoration-color: currentColor;
+}
+p {
+	margin-bottom: 1em;
+}
+.prose p {
+	margin-bottom: 1.4em;
+}
+textarea {
+	width: 100%;
+	font-size: 16px;
+}
+input {
+	font-size: 16px;
+}
+table {
+	width: 100%;
+}
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+}
+code {
+	padding: 2px 5px;
+	background-color: rgb(var(--hover-bg));
+	border-radius: 4px;
+	font-family: var(--font-mono), monospace;
+	font-size: 0.85em;
+}
+pre {
+	padding: 1.25em;
+	border-radius: 8px;
+	overflow-x: auto;
+	background-color: rgb(var(--hover-bg));
+	font-family: var(--font-mono), monospace;
+	font-size: 0.875em;
+}
+pre > code {
+	all: unset;
+}
+blockquote {
+	border-left: 2px solid rgb(var(--border));
+	padding: 0 0 0 16px;
+	margin: 1.25em 0;
+	color: rgb(var(--muted));
+	font-style: italic;
+}
+hr {
+	border: none;
+	border-top: 1px solid rgb(var(--border));
+	margin: 2em 0;
+}
+
+/* VIIO reveals sections as they scroll into view. CSS scroll-driven animations do
+   this with no JavaScript; where they aren't supported, Reveal.astro takes over. */
+@keyframes reveal-in {
+	from {
+		opacity: 0;
+		transform: translateY(14px);
+	}
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+/* The hidden state is applied by Reveal.astro, not here, so content stays
+   visible if that script never runs. */
+.reveal-pending {
+	opacity: 0;
+	transform: translateY(14px);
+}
+.reveal-pending.is-revealed {
+	opacity: 1;
+	transform: none;
+	transition:
+		opacity 0.45s ease,
+		transform 0.45s ease;
+}
+
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		.reveal,
+		main > section,
+		.prose > * {
+			animation: reveal-in 1ms linear both;
+			animation-timeline: view();
+			animation-range: entry 0% cover 18%;
+		}
+	}
+}
+
+/* Honour a reader's request for less motion. */
+@media (prefers-reduced-motion: reduce) {
+	body {
+		transition: none;
+	}
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+@media (max-width: 720px) {
+	body {
+		padding: 0.5rem 1rem;
+	}
+	h1 {
+		font-size: 1.5rem;
+	}
+}
+
+.sr-only {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	clip: rect(1px 1px 1px 1px);
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}

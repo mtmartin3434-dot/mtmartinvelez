@@ -1,0 +1,14 @@
+---
+import Base from '../../components/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { SITE_TITLE } from '../../consts';
+import { getPosts } from '../../data/posts';
+import { UI } from '../../i18n';
+
+const posts = await getPosts('en');
+---
+
+<Base title={`${SITE_TITLE} — ${UI.en.blog}`} description="Writing on customer care and ecommerce." locale="en" width={672}>
+	<h1 class="sr-only">{UI.en.blog}</h1>
+	<PostList posts={posts} locale="en" />
+</Base>

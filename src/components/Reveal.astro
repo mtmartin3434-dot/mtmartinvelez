@@ -1,0 +1,39 @@
+---
+---
+
+<script>
+	// VIIO does this with GSAP ScrollTrigger. Modern browsers do it in CSS via
+	// `animation-timeline: view()` (see global.css). This is the fallback for
+	// browsers without scroll-driven animations: same effect, ~1KB, no library.
+	const SELECTOR = '.reveal, main > section, .prose > *';
+
+	function initReveal() {
+		// Nothing to do if the reader wants reduced motion, the CSS path is
+		// supported, or there is no IntersectionObserver at all.
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (CSS.supports('animation-timeline', 'view()')) return;
+		if (!('IntersectionObserver' in window)) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					entry.target.classList.add('is-revealed');
+					// Reveal once, then stop watching it.
+					observer.unobserve(entry.target);
+				}
+			},
+			// Start the reveal slightly before the element reaches the viewport.
+			{ rootMargin: '0px 0px -12% 0px', threshold: 0.01 }
+		);
+
+		for (const target of document.querySelectorAll(SELECTOR)) {
+			target.classList.add('reveal-pending');
+			observer.observe(target);
+		}
+	}
+
+	// Fires on first load and again after every client-side navigation,
+	// so revealed elements work with the view transitions router.
+	document.addEventListener('astro:page-load', initReveal);
+</script>

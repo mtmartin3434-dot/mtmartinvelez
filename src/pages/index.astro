@@ -1,0 +1,75 @@
+---
+import Base from '../components/Base.astro';
+import Portrait from '../components/Portrait.astro';
+import portrait from '../assets/portrait.png';
+
+import { getPosts, postSlug } from '../data/posts';
+import { localizedPath, SITE_DESCRIPTIONS, SITE_NAMES, UI } from '../i18n';
+
+const posts = await getPosts('en');
+---
+
+<Base title={SITE_NAMES.en} description={SITE_DESCRIPTIONS.en} locale="en">
+	<Fragment slot="head">
+		<style>
+			.hero {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+				gap: 0.9em;
+				padding: 2.5em 0 1.5em;
+			}
+			.hero h1 {
+				margin: 0;
+			}
+			.hero p {
+				margin: 0;
+				color: rgb(var(--gray));
+			}
+			.post-list {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.post-list {
+				text-align: left;
+			}
+			.post-list li {
+				display: flex;
+				align-items: baseline;
+				gap: 1rem;
+				margin-bottom: 0.4em;
+			}
+			.post-list .year {
+				flex: 0 0 3rem;
+				color: rgb(var(--muted));
+				font-family: var(--font-mono), monospace;
+				font-size: 0.8125rem;
+			}
+
+		</style>
+	</Fragment>
+
+	<section class="hero">
+		<Portrait src={portrait} />
+		<div>
+			<h1>{SITE_NAMES.en}</h1>
+			<p>{SITE_DESCRIPTIONS.en}</p>
+		</div>
+	</section>
+
+	<section>
+		<h2 class="sr-only">{UI.en.latestPosts}</h2>
+		<ul class="post-list">
+			{
+				posts.map((post) => (
+					<li>
+						<span class="year">{post.data.pubDate.getFullYear()}</span>
+						<a href={localizedPath('en', `/blog/${postSlug(post)}`)}>{post.data.title}</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</Base>

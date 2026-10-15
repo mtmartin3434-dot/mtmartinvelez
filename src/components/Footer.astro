@@ -1,0 +1,33 @@
+---
+import { SITE_NAMES } from '../i18n';
+import SocialLinks from './SocialLinks.astro';
+import { DEFAULT_LOCALE, type Locale } from '../i18n';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer>
+	<div class="meta">
+		{SITE_NAMES[locale]} · {year}
+	</div>
+	<SocialLinks />
+</footer>
+
+<style>
+	footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		margin-top: 1.5rem;
+		padding: 1.5rem 0 2rem;
+		font-family: var(--font-mono), monospace;
+		font-size: 0.75rem;
+		color: rgb(var(--muted));
+	}
+</style>

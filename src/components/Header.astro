@@ -1,0 +1,72 @@
+---
+import { DEFAULT_LOCALE, SITE_NAMES, UI, localizedPath, type Locale } from '../i18n';
+import HeaderLink from './HeaderLink.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import SocialLinks from './SocialLinks.astro';
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+const nav = [
+	{ label: UI[locale].blog, href: localizedPath(locale, '/blog') },
+	{ label: UI[locale].cv, href: localizedPath(locale, '/cv') },
+];
+---
+
+<header>
+	<h2>
+		<a href={localizedPath(locale)}>{SITE_NAMES[locale]}</a>
+	</h2>
+	<nav>
+		{nav.map(({ label, href }) => <HeaderLink href={href}>{label}</HeaderLink>)}
+		<LanguageSwitcher locale={locale} />
+	</nav>
+	<SocialLinks />
+</header>
+
+<style>
+	header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		margin-bottom: 2.5rem;
+	}
+	h2 {
+		margin: 0;
+		font-size: 1rem;
+		font-weight: 700;
+		white-space: nowrap;
+	}
+	/* Pull the hover background into the gutter so the pill lines up with the edge. */
+	h2 a {
+		display: inline-block;
+		padding: 0.5rem;
+		margin-left: -0.5rem;
+		border-radius: 1rem;
+		color: rgb(var(--text));
+		text-decoration: none;
+		transition: background-color 0.15s ease;
+	}
+	h2 a:hover {
+		background-color: rgb(var(--hover-bg));
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		grow: 1;
+		font-size: 0.75rem;
+	}
+	@media (max-width: 720px) {
+		header {
+			flex-wrap: wrap;
+			margin-bottom: 1.5rem;
+		}
+		.social-links {
+			display: none;
+		}
+	}
+</style>

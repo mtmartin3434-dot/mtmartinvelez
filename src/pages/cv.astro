@@ -1,0 +1,13 @@
+---
+import Base from '../components/Base.astro';
+import CvContent from '../components/CvContent.astro';
+import { SITE_NAMES, UI } from '../i18n';
+---
+
+<Base
+	title={`${UI.en.cv} — ${SITE_NAMES.en}`}
+	description="Customer care and ecommerce operations — beauty and skincare."
+	locale="en"
+>
+	<CvContent locale="en" />
+</Base>

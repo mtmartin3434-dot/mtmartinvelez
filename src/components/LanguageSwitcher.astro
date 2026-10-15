@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content';
+import { postSlug } from '../data/posts';
+import { LOCALE_NAMES, UI, localizedPath, otherLocale, pathSegments, type Locale } from '../i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const target = otherLocale(locale);
+const segments = pathSegments(Astro.url.pathname);
+const [section, slug] = segments;
+
+// A post only exists in one language. If this one isn't translated yet, point at
+// that language's blog index instead of a URL that would just redirect back.
+let path = `/${segments.join('/')}`;
+if (section === 'blog' && slug) {
+	const translated = await getCollection('blog', ({ data }) => data.lang === target);
+	if (!translated.some((post) => postSlug(post) === slug)) path = '/blog';
+}
+
+const href = localizedPath(target, path);
+---
+
+<a class="lang-switch" href={href} hreflang={target} lang={target} aria-label={UI[locale].readIn}>
+	{LOCALE_NAMES[target]}
+</a>
+
+<style>
+	.lang-switch {
+		font-size: 0.8em;
+	}
+</style>

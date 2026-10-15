@@ -1,0 +1,13 @@
+---
+import Base from '../../../components/Base.astro';
+import PostList from '../../../components/PostList.astro';
+import { getPosts } from '../../../data/posts';
+import { SITE_NAMES, UI } from '../../../i18n';
+
+const posts = await getPosts('es');
+---
+
+<Base title={`${SITE_NAMES.es} — ${UI.es.blog}`} description="Artículos sobre atención al cliente y comercio electrónico." locale="es" width={672}>
+	<h1 class="sr-only">{UI.es.blog}</h1>
+	{posts.length ? <PostList posts={posts} locale="es" /> : <p>{UI.es.noPosts}</p>}
+</Base>

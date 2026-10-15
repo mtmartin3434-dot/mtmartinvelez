@@ -1,0 +1,23 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import BlogPost from '../../../layouts/BlogPost.astro';
+import { postSlug } from '../../../data/posts';
+
+export async function getStaticPaths() {
+	// Only Spanish posts. English-only posts reach /es/ URLs through the i18n fallback.
+	const posts = await getCollection('blog', ({ data }) => data.lang === 'es');
+	return posts.map((post) => ({
+		params: { slug: postSlug(post) },
+		props: post,
+	}));
+}
+
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content } = await render(post);
+---
+
+<BlogPost {...post.data} locale="es">
+	<Content />
+</BlogPost>

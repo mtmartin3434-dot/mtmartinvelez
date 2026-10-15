@@ -1,0 +1,37 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { localeFromPath } from '../i18n';
+
+type Props = HTMLAttributes<'a'>;
+
+const { href, class: className, ...props } = Astro.props;
+const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
+const locale = localeFromPath(pathname);
+// Compare against the path without its locale prefix, so /es/blog/ still marks Blog active.
+const stripped = pathname.replace(new RegExp(`^/${locale}(?=/|$)`), '') || '/';
+const subpath = stripped.match(/[^\/]+/g);
+const isActive = href === stripped || href === '/' + (subpath?.[0] || '');
+---
+
+<a href={href} class:list={[className, { active: isActive }]} {...props}>
+	<span><slot /></span>
+</a>
+
+<style>
+	a {
+		text-decoration: none;
+		color: inherit;
+	}
+	a span {
+		display: inline-block;
+		padding: 0.125rem 0.375rem;
+		border-radius: 0.5rem;
+		transition: background-color 0.15s ease;
+	}
+	a:hover span {
+		background-color: rgb(var(--hover-bg));
+	}
+	a.active {
+		font-weight: 700;
+	}
+</style>

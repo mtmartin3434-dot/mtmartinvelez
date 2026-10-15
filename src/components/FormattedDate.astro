@@ -1,0 +1,17 @@
+---
+interface Props {
+	date: Date;
+	/** BCP 47 locale. Defaults to UK English. */
+	locale?: string;
+}
+
+const { date, locale = 'en-GB' } = Astro.props;
+---
+
+<time class="date" datetime={date.toISOString()}>
+	{date.toLocaleDateString(locale, {
+		year: 'numeric',
+		month: 'short',
+		day: 'numeric',
+	})}
+</time>
